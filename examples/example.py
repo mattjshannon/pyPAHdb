@@ -24,4 +24,6 @@ if __name__ == "__main__":
     result = pypahdb.decomposer(observation.spectrum)
 
     # write results to file
-    pypahdb.writer(result, opdf=False, header=observation.header, basename=basename(splitext(observation.file_path)[0]) + '_')
+    pypahdb.writer(result, opdf=False, ofits=True,
+                   header=observation.header,
+                   basename=basename(splitext(observation.file_path)[0]) + '_')
