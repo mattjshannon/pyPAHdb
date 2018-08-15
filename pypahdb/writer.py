@@ -103,60 +103,36 @@ class writer(object):
         ax2 = fig.add_subplot(gs[2], sharex=ax0)
         ax3 = fig.add_subplot(gs[3], sharex=ax0)
 
-        # Common abscissa.
-        wave = 1e4 / self.result.spectrum.abscissa
-
-        # ######## AX0 ######## #
-        # Plot data and overall model fit.
-        data = self.result.spectrum.ordinate[:, i, j]
-        model = self.result.fit[:, i, j]
-        ax0.plot(wave, data, 'x', ms=5, mew=0.5, label='input', color='black')
-        ax0.plot(wave, model, label='fit', color='red')
-
-        # Overplot the "norm" as text.
+        # Best fit.
+        data = self.result.spectrum.ordinate[:,i,j]
+        model = self.result.fit[:,i,j]
+        ax0.plot(self.result.spectrum.abscissa, data, 'x', ms=5, mew=0.5 , label='input', color='black')
+        ax0.plot(self.result.spectrum.abscissa, model, label='fit', color='red')
         norm_val = self.result.norm[i][j]
         norm_str = smart_round(norm_val, style="0.1")
         ax0.text(0.025, 0.9, '$norm$=' + norm_str, ha='left', va='center',
                  transform=ax0.transAxes)
 
-        # ######## AX1 ######## #
-        # Plot the residuals of ( data - model ).
-        ax1.plot(wave, data - model, lw=1, label='residual', color='black')
-        ax1.axhline(y=0, color='0.5', ls='--', dashes=(12, 16), zorder=-10,
-                    lw=0.5)
+        # Residuals.
+        ax1.plot(self.result.spectrum.abscissa, data - model, lw=1, label='residual', color='black')
+        ax1.axhline(y=0, color='0.5', ls='--', dashes=(12,16), zorder=-10, lw=0.5)
+        ax1.tick_params(axis='both', which='both', direction='in', top=True, right=True)
 
-        # ######## AX2 ######## #
-        # Model breakdown: by size.
-        ax2.plot(wave, model, color='red', lw=1.5)
-        y_small = self.result.size['small'][:, i, j]
-        y_large = self.result.size['large'][:, i, j]
-        ax2.fill_between(wave, y_large * 0, y_large, label='large',
-                         color='xkcd:blue', alpha=0.3, zorder=2)
-        ax2.fill_between(wave, y_small * 0, y_small, label='small',
-                         color='xkcd:green', alpha=0.4, zorder=1)
-        ax2.plot(wave, self.result.size['large'][:, i, j],
-                 lw=1, color='xkcd:blue', zorder=2)
-        ax2.plot(wave, self.result.size['small'][:, i, j],
-                 lw=1, color='xkcd:green', alpha=0.4, zorder=1)
-
-        # Overplot the large fraction as text.
+        # Size breakdown.
+        ax2.plot(self.result.spectrum.abscissa, model, color='red', lw=1.5)
+        ax2.plot(self.result.spectrum.abscissa, self.result.size['large'][:,i,j], label='large', lw=1, color='purple')
+        ax2.plot(self.result.spectrum.abscissa, self.result.size['small'][:,i,j], label='small', lw=1, color='crimson')
         size_frac = self.result.large_fraction[i][j]
         size_str = smart_round(size_frac, "0.01")
         size_str = '$f_{large}$=' + size_str
         ax2.text(0.025, 0.9, size_str, ha='left', va='center',
                  transform=ax2.transAxes)
 
-        # ######## AX3 ######## #
-        # Model breakdown: by charge.
-        ax3.plot(wave, model, color='red', lw=1.5)
-        ax3.plot(wave, self.result.charge['anion'][:, i, j],
-                 label='anion', lw=1, color='orange')
-        ax3.plot(wave, self.result.charge['neutral'][:, i, j],
-                 label='neutral', lw=1, color='green')
-        ax3.plot(wave, self.result.charge['cation'][:, i, j],
-                 label='cation', lw=1, color='blue')
-
-        # Overplot the ionized fraction as text.
+        # Charge breakdown.
+        ax3.plot(self.result.spectrum.abscissa, model, color='red', lw=1.5)
+        ax3.plot(self.result.spectrum.abscissa, self.result.charge['anion'][:,i,j], label='anion', lw=1, color='orange')
+        ax3.plot(self.result.spectrum.abscissa, self.result.charge['neutral'][:,i,j], label='neutral', lw=1, color='green')
+        ax3.plot(self.result.spectrum.abscissa, self.result.charge['cation'][:,i,j], label='cation', lw=1, color='blue')
         ion_frac = self.result.ionized_fraction[i][j]
         ion_str = smart_round(ion_frac, "0.01")
         cat_str = '$f_{ionized}$=' + ion_str
