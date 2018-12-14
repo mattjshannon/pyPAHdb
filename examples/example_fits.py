@@ -26,5 +26,5 @@ if __name__ == '__main__':
     # Write the results to file.
     # doplots is disabled due to significant CPU overhead
     pahdb_fit.save_pdf('NGC7023_pypahdb_fits_example.pdf',
-                       header=obs.header, doplots=False)
+                       header=obs.header, doplots=True)
     pahdb_fit.save_fits('NGC7023_pypahdb_fits_example.fits', header=obs.header)
